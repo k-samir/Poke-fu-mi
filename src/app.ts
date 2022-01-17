@@ -1,27 +1,8 @@
-import express, {Application, Request,Response} from 'express';
-import {User} from './models/user';
+import express from 'express'
+import * as routes from './routes'
 
-const app = express();
-const port = 5000;
+const app = express()
+app.use(express.json())
+routes.register(app)
 
-let users = {};
-  
-app.get('/',(req:Request,res:Response)=>{
-    res.send('Hello world');
-});
-
-app.get('/users', (req:Request,res:Response) => {
-    res.send(users);
-});
-
-// POST method route
-app.post('/register', function (req, res) {
-    res.send(req.body);
-});
-
-
-
-app.listen(port,() => {
-    console.log('Connected successfully on port '  + port)
-});
-
+export {app};
