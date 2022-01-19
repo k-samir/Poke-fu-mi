@@ -28,15 +28,52 @@ class UserRepository {
         const rows = statement.all();
         return rows;
     }
+    login(name, password) {
+        const statement = this.db.prepare("SELECT COUNT(*) AS nbr FROM users WHERE name = ? AND password = ?");
+        try {
+            let row = statement.get(name, password);
+            if (row.nbr == 1) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        catch (error) {
+            return false;
+        }
+    }
+    NameUsed(name) {
+        const statement = this.db.prepare("SELECT COUNT(*) AS nbr FROM users WHERE name = ?");
+        try {
+            let row = statement.get(name);
+            if (row.nbr != 0) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        catch (error) {
+            return error;
+        }
+    }
     getUserById(userId) {
         const statement = this.db
             .prepare("SELECT * FROM users WHERE user_id = ?");
         const rows = statement.get(userId);
         return rows;
     }
-    createUser(name) {
-        const statement = this.db.prepare("INSERT INTO users (name) VALUES (?)");
-        return statement.run(name).lastInsertRowid;
+    createUser(name, password) {
+        let used = this.NameUsed(name);
+        if (used) {
+            console.log("Username already used");
+            throw new Error("Username already used");
+        }
+        else {
+            const statement = this.db.prepare("INSERT INTO users (name,password) VALUES (?,?)");
+            return statement.run(name, password).lastInsertRowid;
+        }
     }
 }
 exports.default = UserRepository;

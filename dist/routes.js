@@ -25,15 +25,32 @@ var request = require('request');
 const register = (app) => {
     app.get('/', (req, res) => res.send('Hello World!'));
     app.get('/user', (req, res) => {
-        res.status(200).json(UserController.listUsers());
+        const newUser = req.body;
+        res.status(200).json(UserController.listUsers(newUser));
     });
     app.get('/pokemon', (req, res) => {
         var url = 'https://pokeapi.co/api/v2/pokemon/';
         req.pipe(request(url)).pipe(res);
     });
-    app.post('/user', (req, res) => {
+    app.post('/register', (req, res) => {
         const newUser = req.body;
-        res.status(200).json(UserController.addUser(newUser));
+        try {
+            let json = UserController.addUser(newUser);
+            res.status(200).json(json);
+        }
+        catch (error) {
+            res.status(409).json({ "status": false, "result": error.message });
+        }
+    });
+    app.post('/login', (req, res) => {
+        const newUser = req.body;
+        let logged = UserController.login(newUser);
+        if (logged) {
+            res.status(200).json({ "status": true, "result": 'Login successfuly!' });
+        }
+        else {
+            res.status(409).json({ "status": false, "result": "Login failed for user!" });
+        }
     });
 };
 exports.register = register;

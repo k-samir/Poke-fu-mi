@@ -32,6 +32,40 @@ export default class UserRepository {
     return rows
   }
 
+  login(name: string,password:string): boolean {
+    const statement = this.db.prepare("SELECT COUNT(*) AS nbr FROM users WHERE name = ? AND password = ?")
+          try{
+            let row = statement.get(name,password)
+            if(row.nbr == 1){
+              return true;
+            }
+            else{
+              return false;
+            }   
+          }
+          catch(error){
+            return false;
+          }  
+  }
+
+  NameUsed(name: string): boolean {
+    const statement = this.db.prepare("SELECT COUNT(*) AS nbr FROM users WHERE name = ?")
+    try{
+      let row = statement.get(name)
+      if(row.nbr != 0){
+        return true;
+      }
+      else{
+        return false;
+      }   
+    }
+    catch(error){
+      return error;
+    }
+  }
+
+
+
   getUserById(userId: number) {
 	const statement = this.db
         .prepare("SELECT * FROM users WHERE user_id = ?")
@@ -39,10 +73,16 @@ export default class UserRepository {
 	return rows    
   }
 
-  createUser(name: string) {
-    const statement = 
-      this.db.prepare("INSERT INTO users (name) VALUES (?)")
-    return statement.run(name).lastInsertRowid
+  createUser(name: string,password: string) {
+    let used = this.NameUsed(name)
+    if(used){ 
+      console.log("Username already used");
+      throw new Error("Username already used")
+    }
+    else{    
+      const statement =  this.db.prepare("INSERT INTO users (name,password) VALUES (?,?)")
+      return statement.run(name,password).lastInsertRowid
+    } 
   }
 
 

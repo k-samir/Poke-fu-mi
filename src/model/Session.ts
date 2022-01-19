@@ -1,6 +1,5 @@
-export type User = {
+export type Session {
     user_id: number;
     name: string;
-    password:string;
     score:number;
-};
+}
