@@ -1,0 +1,36 @@
+services:
+  auth:
+      build: ./Poke-fu-mi-AUTH-API
+      ports:
+        - "5002:5000"
+      volumes:
+        - ./Poke-fu-mi-AUTH-API/src:/usr/src/app/src
+      command: npm run debug
+  user:
+    build: ./Poke-fu-mi-USER-API
+    ports:
+        - "5003:5000"
+    volumes:
+        - ./Poke-fu-mi-USER-API/src:/usr/src/app/src
+    command: npm run debug
+  
+  match:
+    build: ./Poke-fu-mi-MATCH-API
+    ports:
+        - "5001:5000"
+    volumes:
+        - ./Poke-fu-mi-MATCH-API/src:/usr/src/app/src
+    command: npm run debug
+  
+  proxy:
+    image: nginx
+    volumes:
+      - ./proxy:/etc/nginx:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - auth
+      - user
+      - match
+
+  

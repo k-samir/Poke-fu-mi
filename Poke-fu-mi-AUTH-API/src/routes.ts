@@ -4,7 +4,7 @@ import * as UserController from "./user/userController"
 
 var request = require('request');
 export const register = ( app: express.Application ) => {
-  app.get('/', (req, res) => res.send('Hello World! MATCH'));
+  app.get('/', (req, res) => res.send('Hello World! AUTH'));
 
 
   app.get('/pokemon', (req, res) => {
