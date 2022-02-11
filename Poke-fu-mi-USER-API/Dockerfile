@@ -5,7 +5,10 @@ WORKDIR /usr/src/app
 COPY . .
 
 RUN npm install
+RUN npm install nodemon
+RUN npm run build
+
 
 CMD ["npm", "start"]
 
-EXPOSE 5000
+EXPOSE 5003

@@ -4,7 +4,7 @@ import * as UserController from "./user/userController"
 
 var request = require('request');
 export const register = ( app: express.Application ) => {
-  app.get('/', (req, res) => res.send('Hello World!'));
+  app.get('/', (req, res) => res.send('Hello World! USER'));
 
   app.get('/user', (req, res) => {
 	  res.status(200).json(UserController.listUsers())
