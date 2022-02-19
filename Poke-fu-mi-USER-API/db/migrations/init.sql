@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS users (
-  user_id INTEGER PRIMARY KEY,
+  id INTEGER PRIMARY KEY,
   name	TEXT NOT NULL,
-  score   INTEGER DEFAULT 0,
-  password TEXT NOT NULL
+  password TEXT NOT NULL,
+  score   INTEGER DEFAULT 0
+  
 )

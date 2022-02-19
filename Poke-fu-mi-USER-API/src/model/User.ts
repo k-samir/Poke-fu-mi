@@ -1,6 +1,6 @@
-export type User = {
-    user_id: number;
+export class User {
+    id: number;
     name: string;
     password:string;
-    score:number;
+    score:number = 0;
 };

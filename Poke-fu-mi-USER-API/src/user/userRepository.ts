@@ -1,7 +1,8 @@
 import Database from 'better-sqlite3'
 import fs from 'fs'
 import { User } from '../model/User'
-
+var bcrypt = require('bcrypt');
+const saltRounds = 10;
 export default class UserRepository {
   db: Database.Database
 
@@ -64,8 +65,6 @@ export default class UserRepository {
     }
   }
 
-
-
   getUserById(userId: number) {
 	const statement = this.db
         .prepare("SELECT * FROM users WHERE user_id = ?")
@@ -79,10 +78,17 @@ export default class UserRepository {
       console.log("Username already used");
       throw new Error("Username already used")
     }
-    else{    
+    else{ 
       const statement =  this.db.prepare("INSERT INTO users (name,password) VALUES (?,?)")
-      return statement.run(name,password).lastInsertRowid
-    } 
+      bcrypt.hash(password, saltRounds, function(err:any, hash:any) { 
+        if(err){ throw err}
+        return statement.run(name,hash).lastInsertRowid
+    }); 
+    }
+  }
+
+  clearDB(){
+    this.db.exec("DELETE FROM users");
   }
 
 

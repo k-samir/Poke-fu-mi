@@ -3,7 +3,6 @@ import UserRepository from "./userRepository"
 
 const userRepository = new UserRepository()
 
-
 const listUsers = () => {
     return userRepository.getAllUsers() 
 }
@@ -17,5 +16,9 @@ const login = (newUser: User) => {
   return userRepository.login(newUser.name,newUser.password) 
 }
 
-export { listUsers, addUser,login }
+const clearDB = () => {
+  return userRepository.clearDB() 
+}
+
+export { listUsers, addUser,login, clearDB }
 

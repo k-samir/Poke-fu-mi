@@ -10,6 +10,9 @@ export const register = ( app: express.Application ) => {
 	  res.status(200).json(UserController.listUsers())
   })
 
+  app.get('/clear', (req, res) => {
+	  res.status(200).json(UserController.clearDB())
+  })
 
 
   app.get('/pokemon', (req, res) => {
