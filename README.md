@@ -2,7 +2,7 @@
 
 En tant que joueur, je peux …
 - [x] m'inscrire à la plateforme avec un nom d'utilisateur unique.
-- [ ] me connecter à la plateforme utilisant mon nom d’utilisateur et un mot de passe
+- [x] me connecter à la plateforme utilisant mon nom d’utilisateur et un mot de passe
 - [ ] voir la liste de joueurs (avec leur score)
 - [ ] voir la liste de matchs
 - [ ] voir les détails d’un match: joueurs, Pokémons utilisés, etc
