@@ -1,8 +1,12 @@
-import { User } from "../model/User"
+const jwt = require('jsonwebtoken');
 
-const generateToken = (name: string, password: string) => {
-  return '';
+const accessTokenSecret = "youraccesstokensecret"
+
+export const signJWT = (payload: any) => {
+    return jwt.sign(payload, accessTokenSecret, {expiresIn:"1h"});
 }
 
-export { generateToken}
 
+export const verifyJWT = (token: string) =>{
+    return jwt.verify(token, accessTokenSecret);
+}

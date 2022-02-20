@@ -32,62 +32,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.register = void 0;
-const UserController = __importStar(require("./user/userController"));
 const got_1 = __importDefault(require("got"));
+const AuthController = __importStar(require("./auth/authController"));
 var request = require('request');
 const register = (app) => {
-    app.get('/', (req, res) => res.send('Hello World! USER'));
-    app.get('/user', (req, res) => {
-        res.status(200).json(UserController.listUsers());
-    });
-    app.get('/clear', (req, res) => {
-        res.status(200).json(UserController.clearDB());
-    });
-    app.post('/register', (req, res) => {
-        const newUser = req.body;
-        try {
-            let json = UserController.addUser(newUser);
-            res.status(200).json(json);
-        }
-        catch (error) {
-            res.status(409).json({ "status": false, "result": error.message });
-        }
-    });
+    app.get('/', (req, res) => res.send('Hello World! AUTH'));
     app.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const newUser = req.body;
-        let user = yield UserController.login(newUser);
-        if (user) {
-            res.status(200).json(user);
-        }
-        else {
-            res.status(409).json({ "status": false, "result": "Login failed for user!" });
-        }
+        got_1.default.post('http://localhost:5000/login', {
+            json: req.body
+        }).then(response => response.body)
+            .then(body => JSON.parse(body))
+            .then(json => AuthController.signJWT({ name: json.name, role: json.role }))
+            .then(token => res.header('auth-token', token).send(token))
+            .catch(error => res.status(error.response.statusCode || 500).send(error.response.body || "Erreur"));
     }));
-    app.get('/pokemon', verify, (req, res) => {
-        var url = 'https://pokeapi.co/api/v2/pokemon/';
-        req.pipe(request(url)).pipe(res);
+    app.post("/verify", (req, res) => {
+        const token = req.header('auth-token');
+        if (!token)
+            return res.status(401).send('Access Denied');
+        try {
+            const verified = AuthController.verifyJWT(token);
+            res.send(verified);
+        }
+        catch (err) {
+            res.status(400).send('Invalid token');
+        }
     });
-    function verify(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const data = yield got_1.default.post('http://localhost:5001/verify', {
-                    json: req.body,
-                    headers: req.headers
-                });
-                console.log(JSON.parse(data.body).role);
-                if (JSON.parse(data.body).role === 'user') {
-                    next();
-                }
-                else {
-                    res.send('Access Denied');
-                }
-                // TODO SAME WITH ADMIN
-            }
-            catch (err) {
-                res.send("Access Denied");
-            }
-        });
-    }
 };
 exports.register = register;
 //# sourceMappingURL=routes.js.map

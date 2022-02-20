@@ -1,5 +1,5 @@
 export type Session = {
-    user_id: number;
+    id: number;
     name: string;
     score:number;
 }

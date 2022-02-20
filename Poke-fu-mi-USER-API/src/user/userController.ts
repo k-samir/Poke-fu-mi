@@ -12,8 +12,8 @@ const addUser = (newUser: User) => {
   return userRepository.getAllUsers()
 }
 
-const login = (newUser: User) => {
-  return userRepository.login(newUser.name,newUser.password) 
+const login = async (newUser: User) => {
+  return await userRepository.login(newUser.name,newUser.password) 
 }
 
 const clearDB = () => {

@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -31,19 +40,29 @@ class UserRepository {
         return rows;
     }
     login(name, password) {
-        const statement = this.db.prepare("SELECT COUNT(*) AS nbr FROM users WHERE name = ? AND password = ?");
-        try {
-            let row = statement.get(name, password);
-            if (row.nbr == 1) {
-                return true;
+        return __awaiter(this, void 0, void 0, function* () {
+            const statement = this.db.prepare("SELECT COUNT(*) AS nbr FROM users WHERE name = ?");
+            const statement2 = this.db.prepare("SELECT password FROM users WHERE name = ?");
+            try {
+                let row = statement.get(name);
+                if (row.nbr == 1) {
+                    let hash = statement2.get(name);
+                    let result = yield bcrypt.compare(password, hash.password);
+                    if (result) {
+                        return this.getUserByName(name);
+                    }
+                    else {
+                        return null;
+                    }
+                }
+                else {
+                    return null;
+                }
             }
-            else {
-                return false;
+            catch (error) {
+                return error;
             }
-        }
-        catch (error) {
-            return false;
-        }
+        });
     }
     NameUsed(name) {
         const statement = this.db.prepare("SELECT COUNT(*) AS nbr FROM users WHERE name = ?");
@@ -62,8 +81,14 @@ class UserRepository {
     }
     getUserById(userId) {
         const statement = this.db
-            .prepare("SELECT * FROM users WHERE user_id = ?");
+            .prepare("SELECT * FROM users WHERE id = ?");
         const rows = statement.get(userId);
+        return rows;
+    }
+    getUserByName(name) {
+        const statement = this.db
+            .prepare("SELECT * FROM users WHERE name = ?");
+        const rows = statement.get(name);
         return rows;
     }
     createUser(name, password) {

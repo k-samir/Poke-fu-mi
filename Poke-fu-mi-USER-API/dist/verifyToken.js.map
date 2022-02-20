@@ -1,0 +1,1 @@
+{"version":3,"file":"verifyToken.js","sourceRoot":"","sources":["../src/verifyToken.ts"],"names":[],"mappings":";;;;;AAAA,8CAAsB;AAEtB,MAAM,CAAC,OAAO,GAAG,UAAU,GAAQ,EAAC,GAAQ,EAAC,IAAgB;IACzD,aAAG,CAAC,GAAG,CAAC,8BAA8B,CAAC,CAAC,IAAI,CAAC,QAAQ,CAAC,EAAE,CAAC,QAAQ,CAAC,IAAI,CAAC,CAAA;IACvE,IAAI,EAAE,CAAC;AACX,CAAC,CAAA"}
