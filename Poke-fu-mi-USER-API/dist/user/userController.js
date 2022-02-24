@@ -21,7 +21,7 @@ const listUsers = () => {
 exports.listUsers = listUsers;
 const addUser = (newUser) => {
     userRepository.createUser(newUser.name, newUser.password);
-    return userRepository.getAllUsers();
+    return newUser.name + " account succesfuly created";
 };
 exports.addUser = addUser;
 const login = (newUser) => __awaiter(void 0, void 0, void 0, function* () {

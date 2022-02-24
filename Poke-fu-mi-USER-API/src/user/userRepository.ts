@@ -28,7 +28,7 @@ export default class UserRepository {
   }
 
   getAllUsers(): User[] {
-    const statement = this.db.prepare("SELECT * FROM users")
+    const statement = this.db.prepare("SELECT name,score FROM users WHERE role = 'user' ")
     const rows: User[] = statement.all()
     return rows
   }

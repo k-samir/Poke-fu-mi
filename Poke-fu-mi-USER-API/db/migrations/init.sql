@@ -5,3 +5,4 @@ CREATE TABLE IF NOT EXISTS users (
   score   INTEGER DEFAULT 0,
   role TEXT DEFAULT 'user'
 )
+

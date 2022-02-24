@@ -35,7 +35,7 @@ class UserRepository {
         }
     }
     getAllUsers() {
-        const statement = this.db.prepare("SELECT * FROM users");
+        const statement = this.db.prepare("SELECT name,score FROM users WHERE role = 'user' ");
         const rows = statement.all();
         return rows;
     }

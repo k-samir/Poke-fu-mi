@@ -26,6 +26,7 @@ export const register = (app: express.Application) => {
     if(!token) return res.status(401).send('Access Denied');
     try{
       const verified = AuthController.verifyJWT(token);
+      
       res.send(verified)
     }
     catch(err){

@@ -9,7 +9,11 @@ const listUsers = () => {
 
 const addUser = (newUser: User) => {
   userRepository.createUser(newUser.name,newUser.password)
-  return userRepository.getAllUsers()
+  return newUser.name + " account succesfuly created";
+}
+
+const userInDb = (name:string) => {
+  return userRepository.NameUsed(name);
 }
 
 const login = async (newUser: User) => {
@@ -20,5 +24,5 @@ const clearDB = () => {
   return userRepository.clearDB() 
 }
 
-export { listUsers, addUser,login, clearDB }
+export { listUsers, addUser,login, clearDB ,userInDb}
 

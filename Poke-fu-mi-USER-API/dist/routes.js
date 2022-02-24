@@ -27,22 +27,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.register = void 0;
 const UserController = __importStar(require("./user/userController"));
-const got_1 = __importDefault(require("got"));
+const verifyToken_1 = require("./verifyToken");
 var request = require('request');
 const register = (app) => {
     app.get('/', (req, res) => res.send('Hello World! USER'));
-    app.get('/user', (req, res) => {
-        res.status(200).json(UserController.listUsers());
-    });
-    app.get('/clear', (req, res) => {
-        res.status(200).json(UserController.clearDB());
-    });
+    // m'inscrire à la plateforme avec un nom d'utilisateur unique.
     app.post('/register', (req, res) => {
         const newUser = req.body;
         try {
@@ -53,6 +45,7 @@ const register = (app) => {
             res.status(409).json({ "status": false, "result": error.message });
         }
     });
+    // me connecter à la plateforme utilisant mon nom d’utilisateur et un mot de passe
     app.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const newUser = req.body;
         let user = yield UserController.login(newUser);
@@ -63,31 +56,16 @@ const register = (app) => {
             res.status(409).json({ "status": false, "result": "Login failed for user!" });
         }
     }));
-    app.get('/pokemon', verify, (req, res) => {
+    app.get('/users', verifyToken_1.verify, (req, res) => {
+        res.status(200).json(UserController.listUsers());
+    });
+    app.get('/clear', (req, res) => {
+        res.status(200).json(UserController.clearDB());
+    });
+    app.get('/pokemon', verifyToken_1.verify, (req, res) => {
         var url = 'https://pokeapi.co/api/v2/pokemon/';
         req.pipe(request(url)).pipe(res);
     });
-    function verify(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const data = yield got_1.default.post('http://localhost:5001/verify', {
-                    json: req.body,
-                    headers: req.headers
-                });
-                console.log(JSON.parse(data.body).role);
-                if (JSON.parse(data.body).role === 'user') {
-                    next();
-                }
-                else {
-                    res.send('Access Denied');
-                }
-                // TODO SAME WITH ADMIN
-            }
-            catch (err) {
-                res.send("Access Denied");
-            }
-        });
-    }
 };
 exports.register = register;
 //# sourceMappingURL=routes.js.map
