@@ -107,8 +107,5 @@ export default class UserRepository {
   clearDB() {
     this.db.exec("DELETE FROM users");
   }
-
-
-
 }
 

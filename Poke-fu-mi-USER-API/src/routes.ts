@@ -2,7 +2,7 @@ import * as express from "express"
 import { User } from "./model/User";
 import * as UserController from "./user/userController"
 import got from 'got';
-import {verify} from './verifyToken'
+import {verifyAdmin,verifyUser} from './verifyToken'
 
 var request = require('request');
 
@@ -34,16 +34,26 @@ export const register = (app: express.Application) => {
     }
   })
 
-  app.get('/users', verify,(req, res) => {
+  app.get('/users', verifyUser,(req, res) => {
     res.status(200).json(UserController.listUsers())
   })
 
-  app.get('/clear', (req, res) => {
+  app.post('/userInDb', (req, res) => {
+    try {
+      let json = UserController.userInDb(req.body.name)
+      res.status(200).json(json)
+    }
+    catch (error) {
+      res.status(409).json({ "status": false, "result": error.message })
+    }
+  })
+
+  app.get('/clear',verifyAdmin, (req, res) => {
     res.status(200).json(UserController.clearDB())
   })
 
  
-  app.get('/pokemon', verify,(req, res) => {
+  app.get('/pokemon', verifyUser,(req, res) => {
     var url = 'https://pokeapi.co/api/v2/pokemon/';
     req.pipe(request(url)).pipe(res);
   })
