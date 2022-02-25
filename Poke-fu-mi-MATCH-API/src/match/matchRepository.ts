@@ -20,8 +20,8 @@ export default class MatchRepository {
     const testRow = this.db.prepare("SELECT name FROM sqlite_schema WHERE type = 'table' AND name = 'match'").get()
 
     if (!testRow) {
-      console.log('Applying migrations on DB users...')
-      const migrations = ['db/migrations/init.sql']
+      console.log('Applying migrations on DB match ...')
+      const migrations = ['db/migrations/match.sql']
       migrations.forEach(applyMigration)
     }
   }

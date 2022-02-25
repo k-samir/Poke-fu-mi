@@ -30,6 +30,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.register = void 0;
 const UserController = __importStar(require("./user/userController"));
+const InvitationController = __importStar(require("./invitation/invitationController"));
 const verifyToken_1 = require("./verifyToken");
 var request = require('request');
 const register = (app) => {
@@ -56,13 +57,25 @@ const register = (app) => {
             res.status(409).json({ "status": false, "result": "Login failed for user!" });
         }
     }));
-    app.get('/users', verifyToken_1.verify, (req, res) => {
+    app.get('/users', verifyToken_1.verifyUser, (req, res) => {
         res.status(200).json(UserController.listUsers());
     });
-    app.get('/clear', (req, res) => {
+    app.post('/userInDb', (req, res) => {
+        try {
+            let json = UserController.userInDb(req.body.name);
+            res.status(200).json(json);
+        }
+        catch (error) {
+            res.status(409).json({ "status": false, "result": error.message });
+        }
+    });
+    app.get('users/clear', verifyToken_1.verifyAdmin, (req, res) => {
         res.status(200).json(UserController.clearDB());
     });
-    app.get('/pokemon', verifyToken_1.verify, (req, res) => {
+    app.get('invitation/clear', verifyToken_1.verifyAdmin, (req, res) => {
+        res.status(200).json(InvitationController.clearDB());
+    });
+    app.get('/pokemon', verifyToken_1.verifyUser, (req, res) => {
         var url = 'https://pokeapi.co/api/v2/pokemon/';
         req.pipe(request(url)).pipe(res);
     });

@@ -7,6 +7,9 @@ const listUsers = () => {
     return matchRepository.getAllMatch() 
 }
 
+const clearDB = () => {
+    return matchRepository.clearDB() 
+  }
 
-export { listUsers}
+export { listUsers,clearDB}
 

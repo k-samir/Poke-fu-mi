@@ -1,0 +1,1 @@
+{"version":3,"file":"matchController.js","sourceRoot":"","sources":["../../src/match/matchController.ts"],"names":[],"mappings":";;;;;;AAAA,wEAA+C;AAE/C,MAAM,eAAe,GAAG,IAAI,yBAAe,EAAE,CAAA;AAG7C,MAAM,SAAS,GAAG,GAAG,EAAE;IACnB,OAAO,eAAe,CAAC,WAAW,EAAE,CAAA;AACxC,CAAC,CAAA;AAMQ,8BAAS;AAJlB,MAAM,OAAO,GAAG,GAAG,EAAE;IACjB,OAAO,eAAe,CAAC,OAAO,EAAE,CAAA;AAClC,CAAC,CAAA;AAEgB,0BAAO"}

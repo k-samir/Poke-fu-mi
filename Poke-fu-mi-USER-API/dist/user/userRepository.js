@@ -30,7 +30,8 @@ class UserRepository {
         const testRow = this.db.prepare("SELECT name FROM sqlite_schema WHERE type = 'table' AND name = 'users'").get();
         if (!testRow) {
             console.log('Applying migrations on DB users...');
-            const migrations = ['db/migrations/init.sql'];
+            const migrations = ['db/migrations/user.sql'];
+            console.log(migrations);
             migrations.forEach(applyMigration);
         }
     }

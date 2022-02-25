@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.clearDB = exports.login = exports.addUser = exports.listUsers = void 0;
+exports.userInDb = exports.clearDB = exports.login = exports.addUser = exports.listUsers = void 0;
 const userRepository_1 = __importDefault(require("./userRepository"));
 const userRepository = new userRepository_1.default();
 const listUsers = () => {
@@ -24,6 +24,10 @@ const addUser = (newUser) => {
     return newUser.name + " account succesfuly created";
 };
 exports.addUser = addUser;
+const userInDb = (name) => {
+    return userRepository.NameUsed(name);
+};
+exports.userInDb = userInDb;
 const login = (newUser) => __awaiter(void 0, void 0, void 0, function* () {
     return yield userRepository.login(newUser.name, newUser.password);
 });

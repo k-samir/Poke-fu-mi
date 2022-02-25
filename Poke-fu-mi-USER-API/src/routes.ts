@@ -1,7 +1,7 @@
 import * as express from "express"
 import { User } from "./model/User";
 import * as UserController from "./user/userController"
-import got from 'got';
+import * as InvitationController from "./invitation/invitationController"
 import {verifyAdmin,verifyUser} from './verifyToken'
 
 var request = require('request');
@@ -48,8 +48,12 @@ export const register = (app: express.Application) => {
     }
   })
 
-  app.get('/clear',verifyAdmin, (req, res) => {
+  app.get('users/clear',verifyAdmin, (req, res) => {
     res.status(200).json(UserController.clearDB())
+  })
+
+  app.get('invitation/clear',verifyAdmin, (req, res) => {
+    res.status(200).json(InvitationController.clearDB())
   })
 
  

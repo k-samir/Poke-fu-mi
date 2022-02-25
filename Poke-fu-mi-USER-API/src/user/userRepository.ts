@@ -8,6 +8,7 @@ export default class UserRepository {
 
   constructor() {
     this.db = new Database('db/users.db', { verbose: console.log });
+   
     this.applyMigrations()
   }
 
@@ -18,13 +19,19 @@ export default class UserRepository {
       this.db.exec(migration)
     }
 
-    const testRow = this.db.prepare("SELECT name FROM sqlite_schema WHERE type = 'table' AND name = 'users'").get()
+    
 
+
+
+    const testRow = this.db.prepare("SELECT name FROM sqlite_schema WHERE type = 'table' AND name = 'users'").get()
+   
     if (!testRow) {
       console.log('Applying migrations on DB users...')
-      const migrations = ['db/migrations/init.sql']
+      const migrations = ['db/migrations/user.sql']
+      console.log(migrations)
       migrations.forEach(applyMigration)
     }
+
   }
 
   getAllUsers(): User[] {
