@@ -6,8 +6,7 @@ CREATE TABLE IF NOT EXISTS pokemon
    name         TEXT NOT NULL,
    type         TEXT NOT NULL,
    image        TEXT,
-   deck         INTEGER NOT NULL,
-   FOREIGN KEY(deck) REFERENCES deck(id)
+   deck         INTEGER NOT NULL
 );
 
 

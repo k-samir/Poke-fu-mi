@@ -3,11 +3,11 @@
 En tant que joueur, je peux …
 - [x] m'inscrire à la plateforme avec un nom d'utilisateur unique.
 - [x] me connecter à la plateforme utilisant mon nom d’utilisateur et un mot de passe
-- [ ] voir la liste de joueurs (avec leur score)
-- [ ] voir la liste de matchs
+- [x] voir la liste de joueurs (avec leur score)
+- [x] voir la liste de matchs
 - [ ] voir les détails d’un match: joueurs, Pokémons utilisés, etc
-- [ ] inviter un autre joueur à un match (creer un match)
-- [ ] consulter les invitations reçues
+- [x] inviter un autre joueur à un match (creer un match)
+- [x] consulter les invitations reçues
 - [ ] accepter une invitation à un match (joindre un match existant)
 - [ ] créer un deck pour un match
 - [ ] envoyer un Pokémon à l’arena et consulter le résultat du combat

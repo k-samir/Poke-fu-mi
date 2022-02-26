@@ -20,7 +20,7 @@ async function verify(req: express.Request, res: express.Response,next: () => vo
     });
 
     if(JSON.parse(data.body).role === typeOfCheck){
-        if(UserController.userInDb(JSON.parse(data.body).name)){
+        if(UserController.userInDb(JSON.parse(data.body).id)){
             next();
         }
         else{

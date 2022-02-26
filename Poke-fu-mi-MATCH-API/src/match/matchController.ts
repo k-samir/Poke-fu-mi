@@ -1,9 +1,39 @@
+
 import MatchRepository from "./matchRepository"
+import got from 'got';
 
 const matchRepository = new MatchRepository()
 
+const addMatch = async (matchOwnerId:number,matchOwnerName:string,id_player2: number) => {
+  var idMatch
+  if(id_player2 == null){
+    idMatch = matchRepository.createEmptyMatch(matchOwnerId)
+    return "Empty Match " + idMatch + " created, waiting for player2 to join.";
+  }
+  else{
+      idMatch = matchRepository.createMatch(matchOwnerId,id_player2)
+      // send invite
+      const addInvite = await got.post('http://user:5000/newInvitation', {
+          json: { fromId:matchOwnerId,
+                  fromName: matchOwnerName,
+                  matchId: idMatch,
+                  invitRecipient: id_player2
+                }
+      }).json()
+      nextMatchStatus(idMatch)
 
-const listUsers = () => {
+
+
+      return "Match " + idMatch + " created, Invitation " + addInvite + " has been sent, waiting for player2 to accept.";
+  }
+ 
+}
+const nextMatchStatus = (matchId : number) => {
+  return matchRepository.nextMatchStatus(matchId) 
+}
+
+
+const listMatch = () => {
     return matchRepository.getAllMatch() 
 }
 
@@ -11,5 +41,5 @@ const clearDB = () => {
     return matchRepository.clearDB() 
   }
 
-export { listUsers,clearDB}
+export { listMatch,clearDB,addMatch}
 

@@ -27,8 +27,8 @@ export default class InvitationRepository {
     }
   }
 
-  getAllInvitations(userId:string): Invitation[] {
-    const statement = this.db.prepare("SELECT * FROM invitations WHERE invitRecipient = ? ")
+  getAllInvitations(userId:number): Invitation[] {
+    const statement = this.db.prepare("SELECT * FROM invitation WHERE invitRecipient = ? ")
     try{
       const rows: Invitation[] = statement.all(userId)
       return rows
@@ -37,6 +37,13 @@ export default class InvitationRepository {
       return error;
     }
   }
+
+  createInvitation(fromId:number,fromName:string,matchId:number,invitRecipient:number){
+    const statement = this.db.prepare("INSERT INTO invitation (fromId,fromName,matchId,invitRecipient) VALUES (?,?,?,?)")
+    return statement.run(fromId,fromName,matchId,invitRecipient).lastInsertRowid;
+  }
+
+  
 
   clearDB() {
     this.db.exec("DELETE FROM invitations");

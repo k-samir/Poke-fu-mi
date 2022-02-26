@@ -14,7 +14,7 @@ export const register = (app: express.Application) => {
       json: req.body
     }).then(response => response.body)
     .then(body => JSON.parse(body))
-    .then(json => AuthController.signJWT({ name: json.name, role: json.role }))
+    .then(json => AuthController.signJWT({ id: json.id,name:json.name,role: json.role }))
     .then(token => res.header('auth-token',token).send(token))
     .catch(error => res.status(error.response.statusCode || 500).send(error.response.body || "Erreur"))
 

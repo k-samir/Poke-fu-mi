@@ -1,5 +1,7 @@
+import { Invitation } from "../model/Invitation"
 import { User } from "../model/User"
 import UserRepository from "./userRepository"
+import got from 'got';
 
 const userRepository = new UserRepository()
 
@@ -12,13 +14,17 @@ const addUser = (newUser: User) => {
   return newUser.name + " account succesfuly created";
 }
 
-const userInDb = (name:string) => {
-  return userRepository.NameUsed(name);
+const userInDb = (id:number) => {
+  return userRepository.idUsed(id);
 }
+
 
 const login = async (newUser: User) => {
   return await userRepository.login(newUser.name,newUser.password) 
 }
+
+
+
 
 const clearDB = () => {
   return userRepository.clearDB() 

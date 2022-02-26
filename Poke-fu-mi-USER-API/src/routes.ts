@@ -3,8 +3,10 @@ import { User } from "./model/User";
 import * as UserController from "./user/userController"
 import * as InvitationController from "./invitation/invitationController"
 import {verifyAdmin,verifyUser} from './verifyToken'
+import { Invitation } from "./model/Invitation";
 
 var request = require('request');
+const jwtDecode = require("jwt-decode");
 
 export const register = (app: express.Application) => {
 
@@ -35,12 +37,16 @@ export const register = (app: express.Application) => {
   })
 
   app.get('/users', verifyUser,(req, res) => {
-    res.status(200).json(UserController.listUsers())
+     res.status(200).json(UserController.listUsers())
   })
+
+  app.get('/invitations', verifyUser,(req, res) => {
+    res.status(200).json(InvitationController.listInvitation(jwtDecode(req.headers['auth-token']).id))
+ })
 
   app.post('/userInDb', (req, res) => {
     try {
-      let json = UserController.userInDb(req.body.name)
+      let json = UserController.userInDb(req.body.id)
       res.status(200).json(json)
     }
     catch (error) {
@@ -54,6 +60,17 @@ export const register = (app: express.Application) => {
 
   app.get('invitation/clear',verifyAdmin, (req, res) => {
     res.status(200).json(InvitationController.clearDB())
+  })
+
+  app.post('/newInvitation', (req, res) => {
+    try {
+      const newInvite: Invitation = req.body
+      let json = InvitationController.newInvitation(newInvite)
+      res.status(200).json(json)
+    }
+    catch (error) {
+      res.status(409).json({ "status": false, "result": error.message })
+    }
   })
 
  

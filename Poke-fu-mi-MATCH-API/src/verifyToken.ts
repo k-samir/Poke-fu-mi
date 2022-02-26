@@ -22,7 +22,7 @@ async function verify(req: express.Request, res: express.Response,next: () => vo
     if(JSON.parse(data.body).role === typeOfCheck){
 
       const inDb = await got.post('http://user:5000/userInDb', {
-        json: { name : JSON.parse(data.body).name }
+        json: { id : JSON.parse(data.body).id }
       });
 
       if(JSON.parse(inDb.body)){

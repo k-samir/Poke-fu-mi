@@ -19,11 +19,7 @@ export default class UserRepository {
       this.db.exec(migration)
     }
 
-    
-
-
-
-    const testRow = this.db.prepare("SELECT name FROM sqlite_schema WHERE type = 'table' AND name = 'users'").get()
+       const testRow = this.db.prepare("SELECT name FROM sqlite_schema WHERE type = 'table' AND name = 'users'").get()
    
     if (!testRow) {
       console.log('Applying migrations on DB users...')
@@ -35,10 +31,12 @@ export default class UserRepository {
   }
 
   getAllUsers(): User[] {
-    const statement = this.db.prepare("SELECT name,score FROM users WHERE role = 'user' ")
+    const statement = this.db.prepare("SELECT id,name,score FROM users WHERE role = 'user' ")
     const rows: User[] = statement.all()
     return rows
   }
+
+
 
   async login(name: string, password: string): Promise<User[]> {
 
@@ -57,6 +55,21 @@ export default class UserRepository {
       }
       else {
         return null;
+      }
+    }
+    catch (error) {
+      return error;
+    }
+  }
+  idUsed(id: number): boolean {
+    const statement = this.db.prepare("SELECT COUNT(*) AS nbr FROM users WHERE id = ?")
+    try {
+      let row = statement.get(id)
+      if (row.nbr != 0) {
+        return true;
+      }
+      else {
+        return false;
       }
     }
     catch (error) {
@@ -110,6 +123,7 @@ export default class UserRepository {
       });
     }
   }
+
 
   clearDB() {
     this.db.exec("DELETE FROM users");
