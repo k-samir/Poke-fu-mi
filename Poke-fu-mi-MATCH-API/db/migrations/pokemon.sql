@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS pokemon
    name         TEXT NOT NULL,
    type         TEXT NOT NULL,
    image        TEXT,
-   deck         INTEGER NOT NULL
+   deck         INTEGER NOT NULL,
+   status       TEXT
 );
 
 

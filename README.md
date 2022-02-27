@@ -5,7 +5,7 @@ En tant que joueur, je peux …
 - [x] me connecter à la plateforme utilisant mon nom d’utilisateur et un mot de passe
 - [x] voir la liste de joueurs (avec leur score)
 - [x] voir la liste de matchs
-- [ ] voir les détails d’un match: joueurs, Pokémons utilisés, etc
+- [x] voir les détails d’un match: joueurs, Pokémons utilisés, etc
 - [x] inviter un autre joueur à un match (creer un match)
 - [x] consulter les invitations reçues
 - [x] accepter une invitation à un match (joindre un match existant)
@@ -18,3 +18,4 @@ En tant qu’administrateur, je peux …
 - [x] voir la liste de matchs
 - [ ] effacer et modifier les joueurs et les matchs
 - [ ] consulter les statistiques de la plateforme : nombre de matchs par jour, nombre de matchs par pokemon, nombre de victoires par pokemon, etc
+

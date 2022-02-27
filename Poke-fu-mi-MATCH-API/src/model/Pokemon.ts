@@ -5,4 +5,5 @@ export class Pokemon {
     type:string;
     image:string;
     deck:number;
+    status:string;
 };
