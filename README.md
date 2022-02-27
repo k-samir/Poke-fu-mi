@@ -32,18 +32,18 @@ Poke-fu-mi est une application qui permet d'organiser des combats entre maîtres
 -   localhost:5003/api-docs : User  
 ## Schéma de l'application
 <p align="center">
-<img src="https://github.com/k-samir/Poke-fu-mi/blob/develop/documentation/image/Poke-fu-miArchitecture.png?raw=true">
+<img src="https://github.com/k-samir/Poke-fu-mi/blob/master/documentation/image/Poke-fu-miArchitecture.png?raw=true">
  </p>
  
 ## MCD
 <p align="center">
-<img src="https://github.com/k-samir/Poke-fu-mi/blob/develop/documentation/image/mcd.png?raw=true">
+<img src="https://github.com/k-samir/Poke-fu-mi/blob/master/documentation/image/mcd.png?raw=true">
  </p>
 
 ## JWT
 Le microservice Auth gère l’échange sécurisé de jetons JWT entre microservice afin de limiter certaines actions uniquement destinées aux personnes connectés ou uniquement aux admins.
 <p align="center">
-<img src="https://github.com/k-samir/Poke-fu-mi/blob/develop/documentation/image/CustomJWT.png?raw=true">
+<img src="https://github.com/k-samir/Poke-fu-mi/blob/master/documentation/image/CustomJWT.png?raw=true">
  </p>
  
  
