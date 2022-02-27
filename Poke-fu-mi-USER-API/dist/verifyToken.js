@@ -54,7 +54,7 @@ function verify(req, res, next, typeOfCheck) {
                 headers: req.headers
             });
             if (JSON.parse(data.body).role === typeOfCheck) {
-                if (UserController.userInDb(JSON.parse(data.body).name)) {
+                if (UserController.userInDb(JSON.parse(data.body).id)) {
                     next();
                 }
                 else {
@@ -66,7 +66,7 @@ function verify(req, res, next, typeOfCheck) {
             }
         }
         catch (err) {
-            res.send("Access Denied : Login to use the app");
+            res.status(403).send("Access Denied : Login to use the app");
         }
     });
 }

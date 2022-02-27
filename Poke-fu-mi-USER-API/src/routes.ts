@@ -54,11 +54,11 @@ export const register = (app: express.Application) => {
     }
   })
 
-  app.get('users/clear',verifyAdmin, (req, res) => {
+  app.get('/users/clear',verifyAdmin, (req, res) => {
     res.status(200).json(UserController.clearDB())
   })
 
-  app.get('invitation/clear',verifyAdmin, (req, res) => {
+  app.get('/invitation/clear',verifyAdmin, (req, res) => {
     res.status(200).json(InvitationController.clearDB())
   })
 
@@ -67,6 +67,36 @@ export const register = (app: express.Application) => {
       const newInvite: Invitation = req.body
       let json = InvitationController.newInvitation(newInvite)
       res.status(200).json(json)
+    }
+    catch (error) {
+      res.status(409).json({ "status": false, "result": error.message })
+    }
+  })
+  
+
+  app.post('/joinEmptyMatch',verifyUser, (req, res) => {
+    try {
+      const matchId:number = req.body.matchId
+      let myId = jwtDecode(req.headers['auth-token']).id;
+      InvitationController.joinEmptyMatch(matchId,myId).then(
+        (response) => res.status(200).json(response)
+      ) 
+    }
+    catch (error) {
+      res.status(409).json({ "status": false, "result": error.message })
+    }
+  })
+
+
+
+  app.post('/acceptInvitation',verifyUser, (req, res) => {
+    try {
+      const inviteId:number = req.body.inviteId
+      let myId = jwtDecode(req.headers['auth-token']).id;
+      console.log(inviteId)
+      var  json = InvitationController.acceptInvitation(inviteId,myId).then(
+        (response) => res.status(200).json(response)
+      )
     }
     catch (error) {
       res.status(409).json({ "status": false, "result": error.message })

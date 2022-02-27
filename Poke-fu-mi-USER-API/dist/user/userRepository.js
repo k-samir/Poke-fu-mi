@@ -20,6 +20,11 @@ class UserRepository {
     constructor() {
         this.db = new better_sqlite3_1.default('db/users.db', { verbose: console.log });
         this.applyMigrations();
+        this.initDB();
+    }
+    initDB() {
+        const init = fs_1.default.readFileSync('db/pop/userInit.sql', 'utf8');
+        this.db.exec(init);
     }
     //Table creation
     applyMigrations() {
@@ -36,7 +41,7 @@ class UserRepository {
         }
     }
     getAllUsers() {
-        const statement = this.db.prepare("SELECT name,score FROM users WHERE role = 'user' ");
+        const statement = this.db.prepare("SELECT id,name,score FROM users WHERE role = 'user' ");
         const rows = statement.all();
         return rows;
     }
@@ -64,6 +69,21 @@ class UserRepository {
                 return error;
             }
         });
+    }
+    idUsed(id) {
+        const statement = this.db.prepare("SELECT COUNT(*) AS nbr FROM users WHERE id = ?");
+        try {
+            let row = statement.get(id);
+            if (row.nbr != 0) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        catch (error) {
+            return error;
+        }
     }
     NameUsed(name) {
         const statement = this.db.prepare("SELECT COUNT(*) AS nbr FROM users WHERE name = ?");
@@ -104,6 +124,7 @@ class UserRepository {
                 if (err) {
                     throw err;
                 }
+                console.log(hash);
                 return statement.run(name, hash).lastInsertRowid;
             });
         }

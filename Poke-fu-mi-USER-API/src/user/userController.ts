@@ -11,6 +11,7 @@ const listUsers = () => {
 
 const addUser = (newUser: User) => {
   userRepository.createUser(newUser.name,newUser.password)
+ 
   return newUser.name + " account succesfuly created";
 }
 

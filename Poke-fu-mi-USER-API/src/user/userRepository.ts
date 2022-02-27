@@ -8,10 +8,16 @@ export default class UserRepository {
 
   constructor() {
     this.db = new Database('db/users.db', { verbose: console.log });
-   
     this.applyMigrations()
+    this.initDB()
   }
-
+  initDB() {
+    const testRow = this.db.prepare("SELECT id FROM users WHERE name == 'Samir'").get()
+    if (!testRow) {
+      const init = fs.readFileSync('db/pop/userInit.sql', 'utf8')
+      this.db.exec(init)
+    }
+  }
   //Table creation
   applyMigrations() {
     const applyMigration = (path: string) => {
@@ -19,8 +25,8 @@ export default class UserRepository {
       this.db.exec(migration)
     }
 
-       const testRow = this.db.prepare("SELECT name FROM sqlite_schema WHERE type = 'table' AND name = 'users'").get()
-   
+    const testRow = this.db.prepare("SELECT name FROM sqlite_schema WHERE type = 'table' AND name = 'users'").get()
+
     if (!testRow) {
       console.log('Applying migrations on DB users...')
       const migrations = ['db/migrations/user.sql']
@@ -48,7 +54,7 @@ export default class UserRepository {
       if (row.nbr == 1) {
         let hash = statement2.get(name);
         let result: boolean = await bcrypt.compare(password, hash.password)
-        if (result) { 
+        if (result) {
           return this.getUserByName(name);
         }
         else { return null; }
@@ -119,6 +125,7 @@ export default class UserRepository {
       const statement = this.db.prepare("INSERT INTO users (name,password) VALUES (?,?)")
       bcrypt.hash(password, saltRounds, function (err: any, hash: any) {
         if (err) { throw err }
+        console.log(hash)
         return statement.run(name, hash).lastInsertRowid
       });
     }
@@ -126,7 +133,7 @@ export default class UserRepository {
 
 
   clearDB() {
-    this.db.exec("DELETE FROM users");
+    this.db.exec("DELETE FROM users WHERE role IS NOT 'admin'");
   }
 }
 

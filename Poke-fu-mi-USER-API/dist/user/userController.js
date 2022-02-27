@@ -24,8 +24,8 @@ const addUser = (newUser) => {
     return newUser.name + " account succesfuly created";
 };
 exports.addUser = addUser;
-const userInDb = (name) => {
-    return userRepository.NameUsed(name);
+const userInDb = (id) => {
+    return userRepository.idUsed(id);
 };
 exports.userInDb = userInDb;
 const login = (newUser) => __awaiter(void 0, void 0, void 0, function* () {

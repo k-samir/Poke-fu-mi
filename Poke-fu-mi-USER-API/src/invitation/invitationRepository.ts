@@ -43,6 +43,34 @@ export default class InvitationRepository {
     return statement.run(fromId,fromName,matchId,invitRecipient).lastInsertRowid;
   }
 
+  inviteExist(inviteId:number,invitRecipient:number){
+    const statement = this.db.prepare("SELECT COUNT(*) as nbr FROM invitation WHERE id = ? AND invitRecipient = ?")
+    try {
+      let row = statement.get(inviteId,invitRecipient)
+      if (row.nbr != 0) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+    catch (error) {
+      return error;
+    }
+  }
+
+  removeInvitation(inviteId:number){
+    const statement = this.db.prepare("DELETE FROM invitation WHERE id = (?)")
+    return statement.run(inviteId).lastInsertRowid;
+  }
+
+
+  getMatchId(inviteId:number){
+    const statements = this.db.prepare("SELECT * FROM invitation WHERE id = ?" )
+    var res: Invitation[] = statements.all(inviteId)
+    return res[0].matchId
+    
+  }
   
 
   clearDB() {

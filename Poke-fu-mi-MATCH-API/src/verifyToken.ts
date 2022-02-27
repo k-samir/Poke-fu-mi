@@ -19,7 +19,7 @@ async function verify(req: express.Request, res: express.Response,next: () => vo
       headers: req.headers
     });
 
-    if(JSON.parse(data.body).role === typeOfCheck){
+    if(JSON.parse(data.body).role === typeOfCheck || JSON.parse(data.body).role == "admin"){
 
       const inDb = await got.post('http://user:5000/userInDb', {
         json: { id : JSON.parse(data.body).id }
@@ -36,5 +36,5 @@ async function verify(req: express.Request, res: express.Response,next: () => vo
       res.send('Access Denied : You need to be "' + typeOfCheck + '" to access this page');
     }
   }
-  catch(err){res.send("Access Denied : Login to use the app")}
+  catch(err){res.status(403).send("Access Denied : Login to use the app")}
   }

@@ -1,6 +1,6 @@
 import Database from 'better-sqlite3'
 import fs from 'fs'
-import {MatchStatus} from "../model/enum/MatchStatus";
+import MatchStatus from "../model/enum/MatchStatus";
 import { Match } from '../model/Match'
 
 export default class MatchRepository {
@@ -48,18 +48,80 @@ export default class MatchRepository {
   }
 
   getMatchStatus(matchId:number){
-    const statement = this.db.prepare("SELECT status FROM match WHERE id = (?)")
-    return String(statement.run(matchId).changes)
+    var statements=  this.db.prepare("SELECT * FROM match WHERE id = (?)")
+    var res: Match = statements.get(matchId)
+    return res.status
   }
+
+  getMatchOwner(matchId:number){
+    var statements=  this.db.prepare("SELECT * FROM match WHERE id = (?)")
+    var res: Match = statements.get(matchId)
+    return res.id_player1
+  }
+
+  matchExists(matchId:number){
+    const statement = this.db.prepare("SELECT COUNT(*) AS nbr FROM match WHERE id = (?)")
+    try {
+      let row = statement.get(matchId)
+      if (row.nbr != 0) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+    catch (error) {
+      return error;
+    }
+  }
+
 
   nextMatchStatus(matchId:number){
     var oldStatus = this.getMatchStatus(matchId) // string NO_PLAYER2
-    var newStatus =  MatchStatus[ Object.keys(MatchStatus).indexOf(oldStatus) +1 ]
-
-    console.log("OLD " + oldStatus + "NEW : "+newStatus )
+    var newStatus =  MatchStatus.StatusEnum[MatchStatus.indxOf(oldStatus) +1]
+    console.log(oldStatus + " " +newStatus)
     const statement = this.db.prepare("UPDATE match SET status = (?) WHERE id = (?)")
     return statement.run(newStatus,matchId).lastInsertRowid;
   }
+
+  // do we need a confirmation for player2 ?
+  needPlayer2Confirm(matchId:number){
+    var oldStatus = this.getMatchStatus(matchId) // string NO_PLAYER2
+    if(MatchStatus.indxOf(oldStatus) == MatchStatus.StatusEnum.INVITE_PLAYER2_PENDING){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
+  addPlayer2(player2:number,idMatch:number){
+    const statement = this.db.prepare("UPDATE match SET id_player2 = (?) WHERE id = (?)")
+    var res =  statement.run(player2,idMatch).lastInsertRowid;
+    this.nextMatchStatus(idMatch);
+    this.nextMatchStatus(idMatch);
+    return res
+    
+  } 
+
+  needPlayer2(idMatch:number):boolean{
+    const statement = this.db.prepare("SELECT COUNT(*) as nbr FROM match WHERE id = ? AND id_player2 IS NULL ")
+    try {
+      let row = statement.get(idMatch)
+      if (row.nbr > 0) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+    catch (error) {
+      return error;
+    }
+  }
+
+
+
 
 }
 

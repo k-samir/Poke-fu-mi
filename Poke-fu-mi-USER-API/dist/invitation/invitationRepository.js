@@ -25,7 +25,7 @@ class InvitationRepository {
         }
     }
     getAllInvitations(userId) {
-        const statement = this.db.prepare("SELECT * FROM invitations WHERE invitRecipient = ? ");
+        const statement = this.db.prepare("SELECT * FROM invitation WHERE invitRecipient = ? ");
         try {
             const rows = statement.all(userId);
             return rows;
@@ -33,6 +33,34 @@ class InvitationRepository {
         catch (error) {
             return error;
         }
+    }
+    createInvitation(fromId, fromName, matchId, invitRecipient) {
+        const statement = this.db.prepare("INSERT INTO invitation (fromId,fromName,matchId,invitRecipient) VALUES (?,?,?,?)");
+        return statement.run(fromId, fromName, matchId, invitRecipient).lastInsertRowid;
+    }
+    inviteExist(inviteId, invitRecipient) {
+        const statement = this.db.prepare("SELECT COUNT(*) as nbr FROM invitation WHERE id = ? AND invitRecipient = ?");
+        try {
+            let row = statement.get(inviteId, invitRecipient);
+            if (row.nbr != 0) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        catch (error) {
+            return error;
+        }
+    }
+    removeInvitation(inviteId) {
+        const statement = this.db.prepare("DELETE FROM invitation WHERE id = (?)");
+        return statement.run(inviteId).lastInsertRowid;
+    }
+    getMatchId(inviteId) {
+        const statements = this.db.prepare("SELECT * FROM invitation WHERE id = ?");
+        var res = statements.all(inviteId);
+        return res[0].matchId;
     }
     clearDB() {
         this.db.exec("DELETE FROM invitations");

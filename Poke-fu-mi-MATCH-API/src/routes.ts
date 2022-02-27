@@ -21,7 +21,59 @@ export const register = (app: express.Application) => {
     res.status(200).json(MatchController.listMatch())
   })
 
-  app.post('/createMatch', async (req, res) => {
+
+
+  
+  app.post('/getMatchOwner', async (req, res) => {
+    try {
+      const matchId = req.body.matchId
+      let json = MatchController.getMatchOwner(matchId)
+      res.status(200).json(json)
+    }
+    catch (error) {
+      res.status(409).json({ "status": false, "result": error.message })
+    }
+  })
+
+
+  app.post('/matchExists',verifyUser, async (req, res) => {
+    try {
+      const matchId = req.body.matchId
+      let json = MatchController.matchExists(matchId)
+      res.status(200).json(json)
+    }
+    catch (error) {
+      res.status(409).json({ "status": false, "result": error.message })
+    }
+  })
+
+  app.post('/acceptFromInvite', async (req, res) => {
+    try {
+      const matchId = req.body.matchId
+      console.log(matchId)
+      let json = MatchController.player2Accept(matchId)
+      res.status(200).json(json)
+    }
+    catch (error) {
+      res.status(409).json({ "status": false, "result": error.message })
+    }
+  })
+
+
+  app.post('/addPlayer2',async (req, res) => {
+    try {
+      const player2 = req.body.id_player2
+      const matchId = req.body.matchId
+
+      let json = MatchController.addPlayer2(player2,matchId)
+      res.status(200).json(json)
+    }
+    catch (error) {
+      res.status(409).json({ "status": false, "result": error.message })
+    }
+  })
+
+  app.post('/createMatch',verifyUser, async (req, res) => {
     console.log(req.body.id_player2);
     try {
       const player2 = req.body.id_player2

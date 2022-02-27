@@ -33,6 +33,7 @@ const UserController = __importStar(require("./user/userController"));
 const InvitationController = __importStar(require("./invitation/invitationController"));
 const verifyToken_1 = require("./verifyToken");
 var request = require('request');
+const jwtDecode = require("jwt-decode");
 const register = (app) => {
     app.get('/', (req, res) => res.send('Hello World! USER'));
     // m'inscrire à la plateforme avec un nom d'utilisateur unique.
@@ -60,9 +61,12 @@ const register = (app) => {
     app.get('/users', verifyToken_1.verifyUser, (req, res) => {
         res.status(200).json(UserController.listUsers());
     });
+    app.get('/invitations', verifyToken_1.verifyUser, (req, res) => {
+        res.status(200).json(InvitationController.listInvitation(jwtDecode(req.headers['auth-token']).id));
+    });
     app.post('/userInDb', (req, res) => {
         try {
-            let json = UserController.userInDb(req.body.name);
+            let json = UserController.userInDb(req.body.id);
             res.status(200).json(json);
         }
         catch (error) {
@@ -74,6 +78,37 @@ const register = (app) => {
     });
     app.get('invitation/clear', verifyToken_1.verifyAdmin, (req, res) => {
         res.status(200).json(InvitationController.clearDB());
+    });
+    app.post('/newInvitation', (req, res) => {
+        try {
+            const newInvite = req.body;
+            let json = InvitationController.newInvitation(newInvite);
+            res.status(200).json(json);
+        }
+        catch (error) {
+            res.status(409).json({ "status": false, "result": error.message });
+        }
+    });
+    app.post('/joinEmptyMatch', verifyToken_1.verifyUser, (req, res) => {
+        try {
+            const matchId = req.body.matchId;
+            let myId = jwtDecode(req.headers['auth-token']).id;
+            InvitationController.joinEmptyMatch(matchId, myId).then((response) => res.status(200).json(response));
+        }
+        catch (error) {
+            res.status(409).json({ "status": false, "result": error.message });
+        }
+    });
+    app.post('/acceptInvitation', verifyToken_1.verifyUser, (req, res) => {
+        try {
+            const inviteId = req.body.inviteId;
+            let myId = jwtDecode(req.headers['auth-token']).id;
+            console.log(inviteId);
+            var json = InvitationController.acceptInvitation(inviteId, myId).then((response) => res.status(200).json(response));
+        }
+        catch (error) {
+            res.status(409).json({ "status": false, "result": error.message });
+        }
     });
     app.get('/pokemon', verifyToken_1.verifyUser, (req, res) => {
         var url = 'https://pokeapi.co/api/v2/pokemon/';
